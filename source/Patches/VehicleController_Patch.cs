@@ -30,7 +30,7 @@ namespace BetterVehicleControls.Patches
 
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]
         [HarmonyPostfix]
-        public static void GetVehicleInput(VehicleController __instance)
+        public static void GetVehicleInput(VehicleController __instance, ref float ___steeringWheelAnimFloat)
         {
             if (!__instance.localPlayerInControl)
             {
@@ -64,6 +64,13 @@ namespace BetterVehicleControls.Patches
             else
             {
                 __instance.drivePedalPressed = (__instance.gear == CarGearShift.Drive && __instance.moveInputVector.y > 0.1f) || (__instance.gear == CarGearShift.Reverse && __instance.moveInputVector.y < -0.1f);
+            }
+
+            if (__instance.moveInputVector.x == 0f && FixesConfig.RecenterWheel.Value)
+            {
+                __instance.steeringInput = 0f;
+                __instance.steeringAnimValue = __instance.steeringInput;
+                ___steeringWheelAnimFloat = __instance.steeringAnimValue;
             }
         }
     }
