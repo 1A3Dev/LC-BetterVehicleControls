@@ -49,7 +49,7 @@ namespace BetterVehicleControls
         internal static ConfigEntry<bool> RecenterWheel;
         internal static void InitConfig()
         {
-            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse based on key press?");
+            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
             PluginLoader.Instance.BindConfig(ref RecenterWheel, "Settings", "Automatically Center Wheel", false, "Should the wheel be automatically re-centered?");
