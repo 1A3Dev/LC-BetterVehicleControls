@@ -3,7 +3,6 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using UnityEngine;
 
 namespace BetterVehicleControls
 {
@@ -44,8 +43,6 @@ namespace BetterVehicleControls
     }
     internal class FixesConfig
     {
-        internal static MethodInfo SetWheelFriction = AccessTools.Method(typeof(VehicleController), "SetWheelFriction");
-
         internal static ConfigEntry<bool> AutomaticGears;
         internal static ConfigEntry<bool> AutomaticPark;
         internal static void InitConfig()
