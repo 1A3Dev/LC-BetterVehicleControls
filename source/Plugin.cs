@@ -43,12 +43,14 @@ namespace BetterVehicleControls
     }
     internal class FixesConfig
     {
-        internal static ConfigEntry<bool> AutomaticGears;
-        internal static ConfigEntry<bool> AutomaticPark;
+        internal static ConfigEntry<bool> AutoSwitchDriveReverse;
+        internal static ConfigEntry<bool> AutoSwitchFromParked;
+        internal static ConfigEntry<bool> AutoSwitchToParked;
         internal static void InitConfig()
         {
-            PluginLoader.Instance.BindConfig(ref AutomaticGears, "Settings", "Automatic Gearbox", true, "Should the gears automatically switch between drive & reverse based on key press?");
-            PluginLoader.Instance.BindConfig(ref AutomaticPark, "Settings", "Automatic Park", true, "Should the gear automatically switch to parked when the key is taken out?");
+            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse based on key press?");
+            PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
+            PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
         }
     }
 }

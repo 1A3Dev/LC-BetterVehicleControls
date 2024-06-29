@@ -18,7 +18,7 @@ namespace BetterVehicleControls.Patches
         [HarmonyPostfix]
         public static void RemoveKeyFromIgnition(VehicleController __instance)
         {
-            if (FixesConfig.AutomaticPark.Value && __instance.localPlayerInControl)
+            if (FixesConfig.AutoSwitchToParked.Value && __instance.localPlayerInControl)
             {
                 int expectedGear = (int)CarGearShift.Park;
                 if ((int)__instance.gear != expectedGear)
@@ -46,15 +46,18 @@ namespace BetterVehicleControls.Patches
                 __instance.brakePedalPressed = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Jump", false).ReadValue<float>() > 0;
             }
 
-            if (FixesConfig.AutomaticGears.Value)
+            if (FixesConfig.AutoSwitchDriveReverse.Value)
             {
                 __instance.drivePedalPressed = __instance.moveInputVector.y > 0.1f || __instance.moveInputVector.y < -0.1f;
                 if (__instance.drivePedalPressed)
                 {
-                    int expectedGear = __instance.moveInputVector.y > 0.1f ? (int)CarGearShift.Drive : (int)CarGearShift.Reverse;
-                    if ((int)__instance.gear != expectedGear)
+                    if (__instance.gear != CarGearShift.Park || FixesConfig.AutoSwitchFromParked.Value)
                     {
-                        __instance.ShiftToGearAndSync(expectedGear);
+                        int expectedGear = __instance.moveInputVector.y > 0.1f ? (int)CarGearShift.Drive : (int)CarGearShift.Reverse;
+                        if ((int)__instance.gear != expectedGear)
+                        {
+                            __instance.ShiftToGearAndSync(expectedGear);
+                        }
                     }
                 }
             }
