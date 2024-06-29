@@ -15,10 +15,10 @@ namespace BetterVehicleControls.Patches
         //}
 
         [HarmonyPatch(typeof(VehicleController), "RemoveKeyFromIgnition")]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         public static void RemoveKeyFromIgnition(VehicleController __instance)
         {
-            if (FixesConfig.AutomaticPark.Value)
+            if (FixesConfig.AutomaticPark.Value && __instance.localPlayerInControl)
             {
                 int expectedGear = (int)CarGearShift.Park;
                 if ((int)__instance.gear != expectedGear)
@@ -29,38 +29,23 @@ namespace BetterVehicleControls.Patches
         }
 
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]
-        [HarmonyPrefix]
-        public static bool GetVehicleInput(VehicleController __instance)
+        [HarmonyPostfix]
+        public static void GetVehicleInput(VehicleController __instance)
         {
             if (!__instance.localPlayerInControl)
             {
-                return false;
+                return;
             }
 
-            InputActionAsset inputActions;
             if (__instance.testingVehicleInEditor)
             {
-                inputActions = __instance.input.actions;
+                __instance.brakePedalPressed = __instance.input.actions.FindAction("Jump", false).ReadValue<float>() > 0;
             }
             else
             {
-                inputActions = IngamePlayerSettings.Instance.playerInput.actions;
+                __instance.brakePedalPressed = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Jump", false).ReadValue<float>() > 0;
             }
-            __instance.moveInputVector = inputActions.FindAction("Move", false).ReadValue<Vector2>();
 
-            float num = __instance.steeringWheelTurnSpeed;
-            __instance.steeringInput = Mathf.Clamp(__instance.steeringInput + __instance.moveInputVector.x * num * Time.deltaTime, -3f, 3f);
-            if (Mathf.Abs(__instance.moveInputVector.x) > 0.1f)
-            {
-                __instance.steeringWheelAudio.volume = Mathf.Lerp(__instance.steeringWheelAudio.volume, Mathf.Abs(__instance.moveInputVector.x), 5f * Time.deltaTime);
-            }
-            else
-            {
-                __instance.steeringWheelAudio.volume = Mathf.Lerp(__instance.steeringWheelAudio.volume, 0f, 5f * Time.deltaTime);
-            }
-            __instance.steeringAnimValue = __instance.moveInputVector.x;
-
-            __instance.brakePedalPressed = inputActions.FindAction("Jump", false).ReadValue<float>() > 0;
             if (FixesConfig.AutomaticGears.Value)
             {
                 __instance.drivePedalPressed = __instance.moveInputVector.y > 0.1f || __instance.moveInputVector.y < -0.1f;
@@ -77,8 +62,6 @@ namespace BetterVehicleControls.Patches
             {
                 __instance.drivePedalPressed = (__instance.gear == CarGearShift.Drive && __instance.moveInputVector.y > 0.1f) || (__instance.gear == CarGearShift.Reverse && __instance.moveInputVector.y < -0.1f);
             }
-
-            return false;
         }
     }
 }

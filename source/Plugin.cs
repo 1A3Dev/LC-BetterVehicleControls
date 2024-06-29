@@ -47,7 +47,7 @@ namespace BetterVehicleControls
         internal static ConfigEntry<bool> AutomaticPark;
         internal static void InitConfig()
         {
-            PluginLoader.Instance.BindConfig(ref AutomaticGears, "Settings", "Automatic Gearbox", true, "Should the gears automatically switch between drive & reverse based on key press?");
+            PluginLoader.Instance.BindConfig(ref AutomaticGears, "Settings", "Automatic Gearbox", false, "Should the gears automatically switch between drive & reverse based on key press?");
             PluginLoader.Instance.BindConfig(ref AutomaticPark, "Settings", "Automatic Park", true, "Should the gear automatically switch to parked when the key is taken out?");
         }
     }
