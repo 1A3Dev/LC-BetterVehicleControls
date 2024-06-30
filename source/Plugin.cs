@@ -47,12 +47,18 @@ namespace BetterVehicleControls
         internal static ConfigEntry<bool> AutoSwitchFromParked;
         internal static ConfigEntry<bool> AutoSwitchToParked;
         internal static ConfigEntry<bool> RecenterWheel;
+        internal static ConfigEntry<bool> VanillaControls;
+        internal static ConfigEntry<float> ChanceToStartIgnition;
+
         internal static void InitConfig()
         {
             PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
             PluginLoader.Instance.BindConfig(ref RecenterWheel, "Settings", "Automatically Center Wheel", false, "Should the wheel be automatically re-centered?");
+            PluginLoader.Instance.BindConfig(ref VanillaControls, "Settings", "Vanilla Controls", false, "Should the controls be the same as vanilla? (This prevents Automatic Gearbox from working)");
+            AcceptableValueRange<float> ignitionChance = new AcceptableValueRange<float>(0f, 101f);
+            ChanceToStartIgnition = PluginLoader.Instance.Config.Bind("Settings", "Ignition Chance", 0f, new ConfigDescription("What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)", ignitionChance));
         }
     }
 }
