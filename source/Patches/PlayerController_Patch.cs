@@ -1,5 +1,7 @@
 ﻿using GameNetcodeStuff;
 using HarmonyLib;
+using System.Linq;
+using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace BetterVehicleControls.Patches
@@ -9,7 +11,7 @@ namespace BetterVehicleControls.Patches
     {
         [HarmonyPatch(typeof(PlayerControllerB), "ScrollMouse_performed")]
         [HarmonyPrefix]
-        public static bool ScrollMouse(PlayerControllerB __instance, CallbackContext context, bool ___throwingObject)
+        public static bool ScrollMouse(PlayerControllerB __instance, ref CallbackContext context, bool ___throwingObject)
         {
             if (!FixesConfig.ScrollableGears.Value) return true;
             if (__instance.inTerminalMenu) return true;
@@ -18,8 +20,8 @@ namespace BetterVehicleControls.Patches
             if (__instance.jetpackControls || __instance.disablingJetpackControls) return true;
             if (__instance.inSpecialInteractAnimation && !__instance.inVehicleAnimation) return true;
 
-            VehicleController vehicle = UnityEngine.Object.FindFirstObjectByType<VehicleController>();
-            if (vehicle != null)
+            VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
+            if (vehicle != null && vehicle.localPlayerInControl)
             {
                 int gear = (int)vehicle.gear;
                 float num = context.ReadValue<float>();
@@ -29,7 +31,6 @@ namespace BetterVehicleControls.Patches
                     {
                         vehicle.ShiftToGearAndSync(gear + 1);
                     }
-                    return false;
                 }
                 else if (num == -1)
                 {
@@ -37,8 +38,8 @@ namespace BetterVehicleControls.Patches
                     {
                         vehicle.ShiftToGearAndSync(gear - 1);
                     }
-                    return false;
                 }
+                return false;
             }
 
             return true;
