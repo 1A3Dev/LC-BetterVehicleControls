@@ -1,6 +1,11 @@
-### 1.0.5
+### 1.0.6
 
 - Fixed the hotbar breaking when grabbing an object from the shelves whilst having an item in the currently selected slot.
+
+### 1.0.5
+
+- Made the mouse scroll wheel gear changing only work if you are the vehicle driver.
+- Fixed the mouse scroll wheel gear changing not supporting multiple vehicles being spawned in at the same time.
 
 ### 1.0.4
 
