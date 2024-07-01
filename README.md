@@ -7,24 +7,30 @@
 
 ### Information
 
-This mod simply modifies the controls of the Company Cruiser to make it more user friendly:
+This mod improves the experience of using the Company Cruiser to make it more user friendly:
 
-- Walk forward (W): Forwards
-- Walk back (S): Backwards
+- Walk forward (W): Move Forwards
+- Walk back (S): Move Backwards
 - Jump (Space): Brake
+- Item switch right (Scroll Up): Gear Forwards
+- Item switch left (Scroll Down): Gear Backwards
 
-It also includes wheel automatic re-centering and more... Check the configuration section below to see all the things you can customise!
+It also includes:
+
+- A fix for the hotbar breaking when grabbing an object from the shelves whilst having an item in the currently selected slot.
+
+and more... check the configuration section below to see all the things you can customise!
 
 ### Configuration
 
 The mod has a bunch of configuration options:
 
+- Toggle for whether to use vanilla movement controls instead of the ones mentioned above.
 - Toggle for whether the gear automatically switches between drive & reverse when pressing the forward/backwards buttons.
 - Toggle for whether the gear automatically switches to drive/reverse from parked.
 - Toggle for whether the gear automatically switches to parked when the key is taken from the ignition.
 - Toggle for whether the wheel should automatically re-center when the left/right buttons aren't pressed.
 - Toggle for whether the mouse scroll wheel changes gears.
-- Toggle for whether vanilla controls are enabled.
 - Ability to change the success chance of the ignition.
 
 ### Support

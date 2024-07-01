@@ -1,3 +1,7 @@
+### 1.0.5
+
+- Fixed the hotbar breaking when grabbing an object from the shelves whilst having an item in the currently selected slot.
+
 ### 1.0.4
 
 - Added a config option to enable changing gears with the mouse scroll wheel.
