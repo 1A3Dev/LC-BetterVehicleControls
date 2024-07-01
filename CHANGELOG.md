@@ -1,3 +1,8 @@
+### 1.0.4
+
+- Added a config option to enable changing gears with the scroll wheel.
+- Changed the default configuration to be more similar to vanilla behaviour (vanilla controls with wheel auto-recentering & mouse scroll wheel for changing gears).
+
 ### 1.0.3
 
 - Added a config option to toggle whether vanilla controls are enabled.
