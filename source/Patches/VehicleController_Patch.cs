@@ -68,7 +68,11 @@ namespace BetterVehicleControls.Patches
             __instance.brakePedalPressed = PluginLoader.VehicleControlsInstance.BrakePedalKey.IsPressed();
 
             int targetDirection = 0;
-            if (PluginLoader.VehicleControlsInstance.MoveForwardsKey.IsPressed())
+            if (PluginLoader.VehicleControlsInstance.GasPedalKey.IsPressed())
+            {
+                __instance.drivePedalPressed = true;
+            }
+            else if (PluginLoader.VehicleControlsInstance.MoveForwardsKey.IsPressed())
             {
                 targetDirection = 1;
                 __instance.drivePedalPressed = true;
@@ -76,10 +80,6 @@ namespace BetterVehicleControls.Patches
             else if (PluginLoader.VehicleControlsInstance.MoveBackwardsKey.IsPressed())
             {
                 targetDirection = 2;
-                __instance.drivePedalPressed = true;
-            }
-            else if (PluginLoader.VehicleControlsInstance.GasPedalKey.IsPressed())
-            {
                 __instance.drivePedalPressed = true;
             }
             else
