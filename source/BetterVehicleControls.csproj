@@ -21,12 +21,17 @@
 
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="BepInEx.Core" Version="5.*" />
         <PackageReference Include="UnityEngine.Modules" Version="2023.2.4" IncludeAssets="compile" />
+        <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" version="0.7.7" />
     </ItemGroup>
 
     <ItemGroup Condition="$(CI) != 'true'">
-        <Reference Include="Assembly-CSharp">
+        <Reference Include="Assembly-CSharp" Publicize="true">
             <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Assembly-CSharp.dll</HintPath>
         </Reference>
         <Reference Include="Unity.Netcode.Runtime">

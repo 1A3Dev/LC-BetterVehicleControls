@@ -1,6 +1,7 @@
-﻿using GameNetcodeStuff;
-using HarmonyLib;
+﻿using HarmonyLib;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BetterVehicleControls.Patches
 {
@@ -31,6 +32,30 @@ namespace BetterVehicleControls.Patches
             }
         }
 
+        [HarmonyPatch(typeof(VehicleController), "ActivateControl")]
+        [HarmonyPostfix]
+        public static void ActivateControl(VehicleController __instance)
+        {
+            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
+            inputActionAsset.FindAction("Jump", false).performed -= __instance.DoTurboBoost;
+
+            PluginLoader.VehicleControlsInstance.TurboKey.performed += __instance.DoTurboBoost;
+            PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed += ChangeGear_Forward;
+            PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed += ChangeGear_Backward;
+
+            __instance.setControlTips = true;
+        }
+
+        [HarmonyPatch(typeof(VehicleController), "DisableControl")]
+        [HarmonyPostfix]
+        public static void DisableControl(VehicleController __instance)
+        {
+            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
+            PluginLoader.VehicleControlsInstance.TurboKey.performed -= __instance.DoTurboBoost;
+            PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
+            PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed -= ChangeGear_Backward;
+        }
+
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]
         [HarmonyPostfix]
         public static void GetVehicleInput(VehicleController __instance, ref float ___steeringWheelAnimFloat)
@@ -40,84 +65,88 @@ namespace BetterVehicleControls.Patches
                 return;
             }
 
-            if (!FixesConfig.VanillaControls.Value)
-            {
-                if (__instance.testingVehicleInEditor)
-                {
-                    __instance.brakePedalPressed = __instance.input.actions.FindAction("Jump", false).ReadValue<float>() > 0;
-                }
-                else
-                {
-                    __instance.brakePedalPressed = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Jump", false).ReadValue<float>() > 0;
-                }
+            __instance.brakePedalPressed = PluginLoader.VehicleControlsInstance.BrakePedalKey.IsPressed();
 
-                if (FixesConfig.AutoSwitchDriveReverse.Value)
+            __instance.drivePedalPressed = PluginLoader.VehicleControlsInstance.GasPedalKey.IsPressed();
+            int targetDirection = 0;
+            if (!__instance.drivePedalPressed)
+            {
+                if (PluginLoader.VehicleControlsInstance.MoveForwardsKey.IsPressed())
                 {
-                    __instance.drivePedalPressed = __instance.moveInputVector.y > 0.1f || __instance.moveInputVector.y < -0.1f;
-                    if (__instance.drivePedalPressed && __instance.gear != CarGearShift.Park)
-                    {
-                        int expectedGear = __instance.moveInputVector.y > 0.1f ? (int)CarGearShift.Drive : (int)CarGearShift.Reverse;
-                        if ((int)__instance.gear != expectedGear)
-                        {
-                            __instance.ShiftToGearAndSync(expectedGear);
-                        }
-                    }
+                    targetDirection = 1;
+                    __instance.drivePedalPressed = true;
                 }
-                else
+                else if (PluginLoader.VehicleControlsInstance.MoveBackwardsKey.IsPressed())
                 {
-                    __instance.drivePedalPressed = (__instance.gear != CarGearShift.Reverse && __instance.moveInputVector.y > 0.1f) || (__instance.gear != CarGearShift.Drive && __instance.moveInputVector.y < -0.1f);
+                    targetDirection = 2;
+                    __instance.drivePedalPressed = true;
+                }
+            }
+            if (__instance.drivePedalPressed && (
+                (FixesConfig.AutoSwitchFromParked.Value && __instance.gear == CarGearShift.Park) ||
+                (FixesConfig.AutoSwitchDriveReverse.Value && __instance.gear != CarGearShift.Park && targetDirection != 0)
+            ))
+            {
+                int expectedGear = targetDirection != 2 ? (int)CarGearShift.Drive : (int)CarGearShift.Reverse;
+                if ((int)__instance.gear != expectedGear)
+                {
+                    __instance.ShiftToGearAndSync(expectedGear);
                 }
             }
 
-            if (FixesConfig.AutoSwitchFromParked.Value && (__instance.drivePedalPressed || (FixesConfig.VanillaControls.Value && __instance.brakePedalPressed)) && __instance.gear == CarGearShift.Park)
+            if (FixesConfig.RecenterWheel.Value && __instance.moveInputVector.x == 0f)
             {
-                int expectedGear = __instance.moveInputVector.y > 0.1f ? (int)CarGearShift.Drive : (int)CarGearShift.Reverse;
-                __instance.ShiftToGearAndSync(expectedGear);
-            }
-
-            if (__instance.moveInputVector.x == 0f && FixesConfig.RecenterWheel.Value)
-            {
-                __instance.steeringInput = 0f;
+                __instance.steeringInput = __instance.moveInputVector.x;
                 __instance.steeringAnimValue = __instance.steeringInput;
                 ___steeringWheelAnimFloat = __instance.steeringAnimValue;
+
+                //__instance.steeringInput = Mathf.MoveTowards(__instance.steeringInput, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
+                //__instance.steeringAnimValue = __instance.steeringInput;
             }
         }
 
-        // Fixed the hotbar breaking when grabbing an object from the shelves whilst having an item in the currently selected slot
-        [HarmonyPatch(typeof(VehicleController), "Start")]
-        [HarmonyPostfix]
-        public static void PlaceObject(VehicleController __instance)
+        //[HarmonyPatch(typeof(VehicleController), "SetCarEffects")]
+        //[HarmonyPrefix]
+        //public static void SetCarEffects(VehicleController __instance, ref float setSteering, ref float ___steeringWheelAnimFloat)
+        //{
+        //    if (FixesConfig.RecenterWheel.Value && __instance.moveInputVector.x == 0f && ___steeringWheelAnimFloat != 0.00f)
+        //    {
+        //        if (___steeringWheelAnimFloat <= 0.1f && ___steeringWheelAnimFloat >= -0.1f)
+        //        {
+        //            ___steeringWheelAnimFloat = 0f;
+        //        }
+        //        else
+        //        {
+        //            setSteering = -Mathf.MoveTowards(___steeringWheelAnimFloat, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
+        //        }
+        //    }
+        //}
+
+        public static void ChangeGear_Forward(InputAction.CallbackContext context)
         {
-            Transform rightShelf = __instance.transform.Find("Triggers/RightShelfPlacementCollider");
-            if (rightShelf != null)
+            if (!context.performed) return;
+            VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
+            if (vehicle != null && vehicle.localPlayerInControl)
             {
-                InteractTrigger interactTrigger = rightShelf.GetComponent<InteractTrigger>();
-                interactTrigger.holdInteraction = true;
-                interactTrigger.timeToHold = 0.35f;
-            }
-
-            Transform leftShelf = __instance.transform.Find("Triggers/LeftShelfPlacementCollider");
-            if (leftShelf != null)
-            {
-                InteractTrigger interactTrigger = leftShelf.GetComponent<InteractTrigger>();
-                interactTrigger.holdInteraction = true;
-                interactTrigger.timeToHold = 0.35f;
-            }
-
-            Transform centerShelf = __instance.transform.Find("Triggers/CenterShelfPlacementCollider");
-            if (centerShelf != null)
-            {
-                InteractTrigger interactTrigger = centerShelf.GetComponent<InteractTrigger>();
-                interactTrigger.holdInteraction = true;
-                interactTrigger.timeToHold = 0.35f;
+                int gear = (int)vehicle.gear;
+                if (gear < 3)
+                {
+                    vehicle.ShiftToGearAndSync(gear + 1);
+                }
             }
         }
-
-        [HarmonyPatch(typeof(PlaceableObjectsSurface), "PlaceObject")]
-        [HarmonyPrefix]
-        public static bool PlaceObject(PlayerControllerB playerWhoTriggered)
+        public static void ChangeGear_Backward(InputAction.CallbackContext context)
         {
-            return !playerWhoTriggered.isGrabbingObjectAnimation;
+            if (!context.performed) return;
+            VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
+            if (vehicle != null && vehicle.localPlayerInControl)
+            {
+                int gear = (int)vehicle.gear;
+                if (gear > 1)
+                {
+                    vehicle.ShiftToGearAndSync(gear - 1);
+                }
+            }
         }
     }
 }
