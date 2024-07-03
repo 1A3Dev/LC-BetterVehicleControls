@@ -18,6 +18,11 @@ This mod improves the experience of using the Company Cruiser to make it more us
 
 **NOTE: The "Gas Pedal" keybind overrides the "Drive Forward/Backward" keybinds (if bound to the same key) so if the mod doesn't seem to work properly, make sure the "Gas Pedal" keybind isn't bound to the same key as "Drive Forward/Backward"!**
 
+### Vanilla Controls
+
+Want to keep the controls the same as vanilla? Well here is a screenshot of what the vanilla controls would be equivalent to:
+![](https://i.gyazo.com/0962779de88f44dbe72515c683c276d7.png)
+
 ### Support
 
 You can get support in any the following places:
@@ -34,8 +39,3 @@ You can get support in any the following places:
   - N/A
 - Not Compatible With:
   - N/A
-
-### Controls
-
-![](https://i.gyazo.com/3845c24b6f795f57f8847dc43ba2d94c.png)
-![](https://i.gyazo.com/60a85875aa3f5534e0bb29eaede5d0aa.png)
