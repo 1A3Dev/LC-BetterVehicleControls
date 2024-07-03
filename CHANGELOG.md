@@ -1,3 +1,8 @@
+### 1.0.7
+
+- Added [InputUtils](https://thunderstore.io/c/lethal-company/p/Rune580/LethalCompany_InputUtils/) as a dependency.
+- Made all controls configurable.
+
 ### 1.0.6
 
 - Fixed the hotbar breaking when grabbing an object from the shelves whilst having an item in the currently selected slot.
