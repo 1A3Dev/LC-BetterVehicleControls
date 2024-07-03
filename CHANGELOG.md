@@ -1,6 +1,7 @@
 ### 1.0.8
 
 - Updated readme and changelog slightly to better clarify that there are now customimisable keybinds.
+- Enabled automatic gearbox by default and changed the default keybinds to support automatic gearbox
 
 ### 1.0.7
 
