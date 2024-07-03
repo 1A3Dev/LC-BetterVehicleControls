@@ -16,7 +16,7 @@ This mod improves the experience of using the Company Cruiser to make it more us
 - Config option for whether the wheel should automatically re-center when the left/right buttons aren't pressed.
 - Config option to change the success chance of the ignition.
 
-**NOTE: The "Gas Pedal" keybind overrides the "Drive Forward/Backward" keybinds so if the mod doesn't seem to work properly, make sure the "Gas Pedal" keybind isn't bound to the same key as "Drive Forward/Backward"!**
+**NOTE: The "Gas Pedal" keybind overrides the "Drive Forward/Backward" keybinds (if bound to the same key) so if the mod doesn't seem to work properly, make sure the "Gas Pedal" keybind isn't bound to the same key as "Drive Forward/Backward"!**
 
 ### Support
 
