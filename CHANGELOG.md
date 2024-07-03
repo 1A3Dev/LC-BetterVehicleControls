@@ -1,7 +1,11 @@
+### 1.0.8
+
+- Updated readme and changelog slightly to better clarify that there are now customimisable keybinds.
+
 ### 1.0.7
 
 - Added [InputUtils](https://thunderstore.io/c/lethal-company/p/Rune580/LethalCompany_InputUtils/) as a dependency.
-- Made all vehicle controls customisable.
+- Made all vehicle controls customisable via the keybind settings in the pause menu.
 - Removed the fix for the shelves breaking the hotbar since it was fixed in vanilla.
 
 ### 1.0.6

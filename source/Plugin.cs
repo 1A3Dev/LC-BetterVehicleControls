@@ -58,7 +58,7 @@ namespace BetterVehicleControls
 
         internal static void InitConfig()
         {
-            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", false, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");;
+            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");;
             PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
             PluginLoader.Instance.BindConfig(ref RecenterWheel, "Settings", "Automatically Center Wheel", true, "Should the wheel be automatically re-centered?");
@@ -69,19 +69,19 @@ namespace BetterVehicleControls
 
     internal class VehicleControls : LcInputActions
     {
-        [InputAction(KeyboardControl.None, Name = "Drive Forward", GamepadPath = "<Gamepad>/leftStick/up")]
+        [InputAction(KeyboardControl.W, Name = "Drive Forward", GamepadPath = "<Gamepad>/leftStick/up")]
         public InputAction MoveForwardsKey { get; set; }
 
-        [InputAction(KeyboardControl.None, Name = "Drive Backward", GamepadPath = "<Gamepad>/leftStick/down")]
+        [InputAction(KeyboardControl.S, Name = "Drive Backward", GamepadPath = "<Gamepad>/leftStick/down")]
         public InputAction MoveBackwardsKey { get; set; }
 
-        [InputAction(KeyboardControl.W, Name = "Gas Pedal", GamepadControl = GamepadControl.RightTrigger)]
+        [InputAction(KeyboardControl.None, Name = "Gas Pedal", GamepadControl = GamepadControl.RightTrigger)]
         public InputAction GasPedalKey { get; set; }
 
-        [InputAction(KeyboardControl.S, Name = "Brake", GamepadControl = GamepadControl.LeftTrigger)]
+        [InputAction(KeyboardControl.Space, Name = "Brake", GamepadControl = GamepadControl.LeftTrigger)]
         public InputAction BrakePedalKey { get; set; }
 
-        [InputAction(KeyboardControl.Space, Name = "Boost", GamepadControl = GamepadControl.ButtonNorth)]
+        [InputAction(KeyboardControl.B, Name = "Boost", GamepadControl = GamepadControl.ButtonNorth)]
         public InputAction TurboKey { get; set; }
 
         [InputAction(MouseControl.ScrollUp, Name = "Shift Gear Forward", GamepadControl = GamepadControl.LeftShoulder)]
