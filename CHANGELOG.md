@@ -1,7 +1,7 @@
 ### 1.0.7
 
 - Added [InputUtils](https://thunderstore.io/c/lethal-company/p/Rune580/LethalCompany_InputUtils/) as a dependency.
-- Made all controls configurable.
+- Made all vehicle controls customisable.
 - Removed the fix for the shelves breaking the hotbar since it was fixed in vanilla.
 
 ### 1.0.6
