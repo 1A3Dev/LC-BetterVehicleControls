@@ -67,21 +67,26 @@ namespace BetterVehicleControls.Patches
 
             __instance.brakePedalPressed = PluginLoader.VehicleControlsInstance.BrakePedalKey.IsPressed();
 
-            __instance.drivePedalPressed = PluginLoader.VehicleControlsInstance.GasPedalKey.IsPressed();
             int targetDirection = 0;
-            if (!__instance.drivePedalPressed)
+            if (PluginLoader.VehicleControlsInstance.MoveForwardsKey.IsPressed())
             {
-                if (PluginLoader.VehicleControlsInstance.MoveForwardsKey.IsPressed())
-                {
-                    targetDirection = 1;
-                    __instance.drivePedalPressed = true;
-                }
-                else if (PluginLoader.VehicleControlsInstance.MoveBackwardsKey.IsPressed())
-                {
-                    targetDirection = 2;
-                    __instance.drivePedalPressed = true;
-                }
+                targetDirection = 1;
+                __instance.drivePedalPressed = true;
             }
+            else if (PluginLoader.VehicleControlsInstance.MoveBackwardsKey.IsPressed())
+            {
+                targetDirection = 2;
+                __instance.drivePedalPressed = true;
+            }
+            else if (PluginLoader.VehicleControlsInstance.GasPedalKey.IsPressed())
+            {
+                __instance.drivePedalPressed = true;
+            }
+            else
+            {
+                __instance.drivePedalPressed = false;
+            }
+
             if (__instance.drivePedalPressed && (
                 (FixesConfig.AutoSwitchFromParked.Value && __instance.gear == CarGearShift.Park) ||
                 (FixesConfig.AutoSwitchDriveReverse.Value && __instance.gear != CarGearShift.Park && targetDirection != 0)
