@@ -1,3 +1,7 @@
+### 1.0.9
+
+- Added the option to enable smooth wheel recentering (shoutout to [@digger1213](https://github.com/digger1213))
+
 ### 1.0.8
 
 - Updated readme and changelog slightly to better clarify that there are now customimisable keybinds.

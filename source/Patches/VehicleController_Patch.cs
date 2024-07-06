@@ -101,31 +101,26 @@ namespace BetterVehicleControls.Patches
 
             if (FixesConfig.RecenterWheel.Value && __instance.moveInputVector.x == 0f)
             {
-                __instance.steeringInput = __instance.moveInputVector.x;
-                __instance.steeringAnimValue = __instance.steeringInput;
-                ___steeringWheelAnimFloat = __instance.steeringAnimValue;
-
-                //__instance.steeringInput = Mathf.MoveTowards(__instance.steeringInput, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
-                //__instance.steeringAnimValue = __instance.steeringInput;
+                if (FixesConfig.RecenterWheelSmooth.Value)
+                {
+                    __instance.steeringInput = Mathf.MoveTowards(__instance.steeringInput, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    __instance.steeringInput = __instance.moveInputVector.x;
+                    __instance.steeringAnimValue = __instance.steeringInput;
+                    ___steeringWheelAnimFloat = __instance.steeringAnimValue;
+                }
             }
         }
 
-        //[HarmonyPatch(typeof(VehicleController), "SetCarEffects")]
-        //[HarmonyPrefix]
-        //public static void SetCarEffects(VehicleController __instance, ref float setSteering, ref float ___steeringWheelAnimFloat)
-        //{
-        //    if (FixesConfig.RecenterWheel.Value && __instance.moveInputVector.x == 0f && ___steeringWheelAnimFloat != 0.00f)
-        //    {
-        //        if (___steeringWheelAnimFloat <= 0.1f && ___steeringWheelAnimFloat >= -0.1f)
-        //        {
-        //            ___steeringWheelAnimFloat = 0f;
-        //        }
-        //        else
-        //        {
-        //            setSteering = -Mathf.MoveTowards(___steeringWheelAnimFloat, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
-        //        }
-        //    }
-        //}
+        [HarmonyPatch(typeof(VehicleController), "SetCarEffects")]
+        [HarmonyPrefix]
+        public static void SetCarEffects(VehicleController __instance, ref float setSteering)
+        {
+            setSteering = 0f;
+            __instance.steeringWheelAnimFloat = __instance.steeringInput / 6f;
+        }
 
         public static void ChangeGear_Forward(InputAction.CallbackContext context)
         {
