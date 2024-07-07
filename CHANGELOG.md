@@ -1,7 +1,7 @@
 ### 1.1.0
 
 - Added a new configurable keybind to manually re-center the wheel (unbinded by default).
-- Added a new configurable keybind to activate the magnet when you are close enough.
+- Added a new configurable keybind to toggle the magnet when you are close enough.
 - Added a config option to choose the speed of the smooth wheel centering.
   - 0 = Instant
   - -1 = Vanilla
