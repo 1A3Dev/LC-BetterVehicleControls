@@ -9,7 +9,7 @@
 
 This mod improves the experience of using the Company Cruiser to make it more user friendly:
 
-- Customisable keybinds for movement, switching gears, manual wheel centering & more via the keybind settings in the pause menu.
+- Customisable keybinds for movement, switching gears, manual wheel centering & toggling the magnet via the keybind settings in the pause menu.
 - Config option for whether the gear automatically switches between drive & reverse when pressing the forward/backwards buttons.
 - Config option for whether the gear automatically switches to drive/reverse from parked.
 - Config option for whether the gear automatically switches to parked when the key is taken from the ignition.
