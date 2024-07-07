@@ -2,11 +2,11 @@
 
 - Added a new configurable keybind to manually re-center the wheel (unbinded by default).
 - Added a new configurable keybind to activate the magnet when you are close enough.
-- Added a config option to customise the max amount of turbo boosts.
-  - If someone who has a lower value configured (or doesn't have the mod) tries to put weed killer in the hood then the value will be limited by their max (vanilla is 5) until you re-fill it.
 - Added a config option to choose the speed of the smooth wheel centering.
   - 0 = Instant
   - -1 = Vanilla
+- Added a config option to customise the max amount of turbo boosts.
+  - If someone who has a lower value configured (or doesn't have the mod) tries to put weed killer in the hood then the value will be limited by their max (vanilla is 5) until you re-fill it.
 
 ### 1.0.9
 
