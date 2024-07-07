@@ -72,6 +72,7 @@ namespace BetterVehicleControls
             
             AcceptableValueRange<int> turboBoostsRange = new AcceptableValueRange<int>(1, 100);
             MaxTurboBoosts = PluginLoader.Instance.Config.Bind("Settings", "Turbo Boosts", 5, new ConfigDescription("How many turbo boosts should be able to use at once? (Vanilla: 5)", turboBoostsRange));
+            PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;
             MaxTurboBoosts.SettingChanged += (_, _) => PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;
         }
     }
