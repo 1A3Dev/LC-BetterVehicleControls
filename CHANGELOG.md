@@ -5,7 +5,7 @@
 - Added a config option to choose the speed of the smooth wheel centering.
   - 0 = Instant
   - -1 = Vanilla
-- Added a config option to customise the max amount of turbo boosts.
+- Added a config option to choose the max amount of turbo boosts that you can have queued up at the same time.
   - If someone who has a lower value configured (or doesn't have the mod) tries to put weed killer in the hood then the value will be limited by their max (vanilla is 5) until you re-fill it.
 
 ### 1.0.9
