@@ -1,5 +1,8 @@
-﻿using HarmonyLib;
+﻿using GameNetcodeStuff;
+using HarmonyLib;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,18 +35,23 @@ namespace BetterVehicleControls.Patches
             }
         }
 
+        public static bool centerKeyPressed = false;
+
         [HarmonyPatch(typeof(VehicleController), "ActivateControl")]
         [HarmonyPostfix]
         public static void ActivateControl(VehicleController __instance)
         {
+            __instance.setControlTips = true;
             InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
+            
             inputActionAsset.FindAction("Jump", false).performed -= __instance.DoTurboBoost;
-
             PluginLoader.VehicleControlsInstance.TurboKey.performed += __instance.DoTurboBoost;
+
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed += ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed += ChangeGear_Backward;
+            PluginLoader.VehicleControlsInstance.ActivateMagnetKey.performed += ActivateMagnet;
 
-            __instance.setControlTips = true;
+            centerKeyPressed = false;
         }
 
         [HarmonyPatch(typeof(VehicleController), "DisableControl")]
@@ -54,6 +62,7 @@ namespace BetterVehicleControls.Patches
             PluginLoader.VehicleControlsInstance.TurboKey.performed -= __instance.DoTurboBoost;
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed -= ChangeGear_Backward;
+            PluginLoader.VehicleControlsInstance.ActivateMagnetKey.performed -= ActivateMagnet;
         }
 
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]
@@ -62,6 +71,7 @@ namespace BetterVehicleControls.Patches
         {
             if (!__instance.localPlayerInControl)
             {
+                centerKeyPressed = false;
                 return;
             }
 
@@ -99,17 +109,31 @@ namespace BetterVehicleControls.Patches
                 }
             }
 
-            if (FixesConfig.RecenterWheel.Value && __instance.moveInputVector.x == 0f)
+            if (!centerKeyPressed && PluginLoader.VehicleControlsInstance.WheelCenterKey.triggered)
             {
-                if (FixesConfig.RecenterWheelSmooth.Value)
+                centerKeyPressed = true;
+            }
+
+            if (__instance.moveInputVector.x == 0f && (FixesConfig.RecenterWheel.Value || centerKeyPressed))
+            {
+                if (FixesConfig.RecenterWheelSpeed.Value < 0f)
                 {
                     __instance.steeringInput = Mathf.MoveTowards(__instance.steeringInput, 0, __instance.steeringWheelTurnSpeed * Time.deltaTime);
+                }
+                else if (FixesConfig.RecenterWheelSpeed.Value > 0f)
+                {
+                    __instance.steeringInput = Mathf.MoveTowards(__instance.steeringInput, 0, FixesConfig.RecenterWheelSpeed.Value * Time.deltaTime);
                 }
                 else
                 {
                     __instance.steeringInput = __instance.moveInputVector.x;
                     __instance.steeringAnimValue = __instance.steeringInput;
                     ___steeringWheelAnimFloat = __instance.steeringAnimValue;
+                }
+
+                if (centerKeyPressed && __instance.steeringInput == 0f)
+                {
+                    centerKeyPressed = false;
                 }
             }
         }
@@ -147,6 +171,77 @@ namespace BetterVehicleControls.Patches
                     vehicle.ShiftToGearAndSync(gear - 1);
                 }
             }
+        }
+
+        public static void ActivateMagnet(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+
+            GameObject magnetLever = GameObject.Find("Environment/HangarShip/MagnetLever");
+            if (magnetLever == null) return;
+
+            AnimatedObjectTrigger magnetTrigger = magnetLever.GetComponent<AnimatedObjectTrigger>();
+            if (magnetTrigger == null) return;
+
+            PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
+            if (Vector3.Distance(player.transform.position, StartOfRound.Instance.magnetPoint.position) >= 10f) return;
+
+            if (magnetTrigger.boolValue) return; // Only allow turning on the magnet
+
+            magnetTrigger.TriggerAnimation(player);
+            string newState = magnetTrigger.boolValue ? "on" : "off";
+            HUDManager.Instance.AddChatMessage($"You turned {newState} the magnet!");
+        }
+
+        [HarmonyPatch(typeof(VehicleController), "AddTurboBoost")]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> AddTurboBoost(IEnumerable<CodeInstruction> instructions)
+        {
+            var newInstructions = new List<CodeInstruction>();
+            bool alreadyReplaced = false;
+            foreach (var instruction in instructions)
+            {
+                if (!alreadyReplaced && instruction.opcode == OpCodes.Ldc_I4_5)
+                {
+                    alreadyReplaced = true;
+                    CodeInstruction codeInstruction = new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PluginLoader), "maxTurboBoosts"));
+                    newInstructions.Add(codeInstruction);
+                    continue;
+                }
+
+                newInstructions.Add(instruction);
+            }
+
+            if (!alreadyReplaced) PluginLoader.logSource.LogWarning("AddTurboBoost failed to replace maxTurboBoosts");
+
+            return newInstructions.AsEnumerable();
+        }
+
+        [HarmonyPatch(typeof(VehicleController), "ReactToDamage")]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> ReactToDamage(IEnumerable<CodeInstruction> instructions)
+        {
+            var newInstructions = new List<CodeInstruction>();
+            bool alreadyReplaced = false;
+            foreach (var instruction in instructions)
+            {
+                if (!alreadyReplaced && instruction.opcode == OpCodes.Ldc_R4 && instruction.operand?.ToString() == "5")
+                {
+                    alreadyReplaced = true;
+                    CodeInstruction codeInstruction = new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PluginLoader), "maxTurboBoosts"));
+                    newInstructions.Add(codeInstruction);
+
+                    CodeInstruction codeInstructionConv = new CodeInstruction(OpCodes.Conv_R4);
+                    newInstructions.Add(codeInstructionConv);
+                    continue;
+                }
+
+                newInstructions.Add(instruction);
+            }
+
+            if (!alreadyReplaced) PluginLoader.logSource.LogWarning("ReactToDamage failed to replace maxTurboBoosts");
+
+            return newInstructions.AsEnumerable();
         }
     }
 }

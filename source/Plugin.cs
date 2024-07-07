@@ -25,6 +25,7 @@ namespace BetterVehicleControls
         internal static VehicleControls VehicleControlsInstance;
 
         internal static ManualLogSource logSource;
+        internal static int maxTurboBoosts = 4;
 
         private void Awake()
         {
@@ -54,8 +55,9 @@ namespace BetterVehicleControls
         internal static ConfigEntry<bool> AutoSwitchFromParked;
         internal static ConfigEntry<bool> AutoSwitchToParked;
         internal static ConfigEntry<bool> RecenterWheel;
-        internal static ConfigEntry<bool> RecenterWheelSmooth;
-        internal static ConfigEntry<float> ChanceToStartIgnition;
+        internal static ConfigEntry<int> RecenterWheelSpeed;
+        internal static ConfigEntry<int> ChanceToStartIgnition;
+        internal static ConfigEntry<int> MaxTurboBoosts;
 
         internal static void InitConfig()
         {
@@ -63,9 +65,14 @@ namespace BetterVehicleControls
             PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
             PluginLoader.Instance.BindConfig(ref RecenterWheel, "Settings", "Automatically Center Wheel", true, "Should the wheel be automatically re-centered?");
-            PluginLoader.Instance.BindConfig(ref RecenterWheelSmooth, "Settings", "Center Wheel Smoothly", true, "If the option for the automatic re-centering is enabled, should the wheel be re-centered smoothly?");
-            AcceptableValueRange<float> ignitionChance = new AcceptableValueRange<float>(0f, 101f);
-            ChanceToStartIgnition = PluginLoader.Instance.Config.Bind("Settings", "Ignition Chance", 0f, new ConfigDescription("What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)", ignitionChance));
+            AcceptableValueRange<int> recenterWheelSpeedRange = new AcceptableValueRange<int>(-1, 20);
+            RecenterWheelSpeed = PluginLoader.Instance.Config.Bind("Settings", "Center Wheel Speed", -1, new ConfigDescription("How fast should the wheel be re-centered? (Instant: 0, Vanilla: -1)", recenterWheelSpeedRange));
+            AcceptableValueRange<int> ignitionChanceRange = new AcceptableValueRange<int>(0, 101);
+            ChanceToStartIgnition = PluginLoader.Instance.Config.Bind("Settings", "Ignition Chance", 0, new ConfigDescription("What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)", ignitionChanceRange));
+            
+            AcceptableValueRange<int> turboBoostsRange = new AcceptableValueRange<int>(1, 100);
+            MaxTurboBoosts = PluginLoader.Instance.Config.Bind("Settings", "Turbo Boosts", 5, new ConfigDescription("How many turbo boosts should be able to use at once? (Vanilla: 5)", turboBoostsRange));
+            MaxTurboBoosts.SettingChanged += (_, _) => PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;
         }
     }
 
@@ -91,5 +98,11 @@ namespace BetterVehicleControls
 
         [InputAction(MouseControl.ScrollDown, Name = "Shift Gear Backward", GamepadControl = GamepadControl.RightShoulder)]
         public InputAction GearShiftBackwardKey { get; set; }
+
+        [InputAction(KeyboardControl.None, Name = "Center Steering Wheel")]
+        public InputAction WheelCenterKey { get; set; }
+
+        [InputAction(KeyboardControl.None, Name = "Activate Magnet")]
+        public InputAction ActivateMagnetKey { get; set; }
     }
 }
