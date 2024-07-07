@@ -49,7 +49,7 @@ namespace BetterVehicleControls.Patches
 
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed += ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed += ChangeGear_Backward;
-            PluginLoader.VehicleControlsInstance.ActivateMagnetKey.performed += ActivateMagnet;
+            PluginLoader.VehicleControlsInstance.ToggleMagnetKey.performed += ActivateMagnet;
 
             centerKeyPressed = false;
         }
@@ -62,7 +62,7 @@ namespace BetterVehicleControls.Patches
             PluginLoader.VehicleControlsInstance.TurboKey.performed -= __instance.DoTurboBoost;
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed -= ChangeGear_Backward;
-            PluginLoader.VehicleControlsInstance.ActivateMagnetKey.performed -= ActivateMagnet;
+            PluginLoader.VehicleControlsInstance.ToggleMagnetKey.performed -= ActivateMagnet;
         }
 
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]

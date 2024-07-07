@@ -103,7 +103,7 @@ namespace BetterVehicleControls
         [InputAction(KeyboardControl.None, Name = "Center Steering Wheel")]
         public InputAction WheelCenterKey { get; set; }
 
-        [InputAction(KeyboardControl.None, Name = "Activate Magnet")]
-        public InputAction ActivateMagnetKey { get; set; }
+        [InputAction(KeyboardControl.None, Name = "Magnet")]
+        public InputAction ToggleMagnetKey { get; set; }
     }
 }
