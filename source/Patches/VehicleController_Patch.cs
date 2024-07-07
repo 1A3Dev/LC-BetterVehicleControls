@@ -186,8 +186,6 @@ namespace BetterVehicleControls.Patches
             PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
             if (Vector3.Distance(player.transform.position, StartOfRound.Instance.magnetPoint.position) >= 10f) return;
 
-            if (magnetTrigger.boolValue) return; // Only allow turning on the magnet
-
             magnetTrigger.TriggerAnimation(player);
             string newState = magnetTrigger.boolValue ? "on" : "off";
             HUDManager.Instance.AddChatMessage($"You turned {newState} the magnet!");
