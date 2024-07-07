@@ -61,7 +61,7 @@ namespace BetterVehicleControls
 
         internal static void InitConfig()
         {
-            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");;
+            PluginLoader.Instance.BindConfig(ref AutoSwitchDriveReverse, "Settings", "Automatic Gearbox", true, "Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchFromParked, "Settings", "Automatic Handbrake Release", false, "Should the gear automatically switch to drive/reverse from parked?");
             PluginLoader.Instance.BindConfig(ref AutoSwitchToParked, "Settings", "Automatic Handbrake Pull", false, "Should the gear automatically switch to parked when the key is taken from the ignition?");
             PluginLoader.Instance.BindConfig(ref RecenterWheel, "Settings", "Automatically Center Wheel", true, "Should the wheel be automatically re-centered?");
@@ -71,7 +71,7 @@ namespace BetterVehicleControls
             ChanceToStartIgnition = PluginLoader.Instance.Config.Bind("Settings", "Ignition Chance", 0, new ConfigDescription("What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)", ignitionChanceRange));
             
             AcceptableValueRange<int> turboBoostsRange = new AcceptableValueRange<int>(1, 100);
-            MaxTurboBoosts = PluginLoader.Instance.Config.Bind("Settings", "Turbo Boosts", 5, new ConfigDescription("How many turbo boosts should be able to use at once? (Vanilla: 5)", turboBoostsRange));
+            MaxTurboBoosts = PluginLoader.Instance.Config.Bind("Settings", "Turbo Boosts", 5, new ConfigDescription("How many turbo boosts should you be able to have queued up at the same time? (Vanilla: 5)", turboBoostsRange));
             PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;
             MaxTurboBoosts.SettingChanged += (_, _) => PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;
         }

@@ -9,13 +9,27 @@
 
 This mod improves the experience of using the Company Cruiser to make it more user friendly:
 
-- Customisable keybinds for movement, switching gears, manual wheel centering & toggling the magnet via the keybind settings in the pause menu.
-- Config option for whether the gear automatically switches between drive & reverse when pressing the forward/backwards buttons.
-- Config option for whether the gear automatically switches to drive/reverse from parked.
-- Config option for whether the gear automatically switches to parked when the key is taken from the ignition.
-- Config option for whether the wheel should automatically re-center when the left/right buttons aren't pressed.
-- Config option to change the success chance of the ignition.
-- Config option to change the max amount of turbo boosts.
+- Customisable Keybinds (via the keybind settings in the pause menu)
+  - Vehicle movement
+  - Switching gears
+  - Manually center the steering wheel
+  - Toggle magnet
+    - This only works when you are within the range of the magnet.
+- Configuration Options
+  - Automatic Gearbox
+    - Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?
+  - Automatic Handbrake Release
+    - Should the gear automatically switch to drive/reverse from parked? This allows the vanilla behaviour of it exploding when trying to drive whilst in the park gear.
+  - Automatic Handbrake Pull
+    - Should the gear automatically switch to parked when the key is taken from the ignition?
+  - Automatically Center Wheel
+    - Should the wheels be automatically centered when the left/right buttons aren't pressed?
+  - Center Wheel Speed
+    - How fast should the wheel be re-centered? (Instant: 0, Vanilla: -1)
+  - Ignition Chance
+    - What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)
+  - Turbo Boosts
+    - How many turbo boosts should you be able to have queued up at the same time? (Vanilla: 5)
 
 **NOTE: The "Gas Pedal" keybind overrides the "Drive Forward/Backward" keybinds (if bound to the same key) so if the mod doesn't seem to work properly, make sure that the "Gas Pedal" keybind isn't bound to the same key as "Drive Forward/Backward"!**
 
