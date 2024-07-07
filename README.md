@@ -10,10 +10,10 @@
 This mod improves the experience of using the Company Cruiser to make it more user friendly:
 
 - Customisable Keybinds (via the keybind settings in the pause menu)
-  - Vehicle movement
-  - Switching gears
-  - Manually center the steering wheel
-  - Toggle magnet
+  - Vehicle Movement
+  - Switching Gears
+  - Manually Center Wheel
+  - Toggle Magnet
     - This only works when you are within the range of the magnet.
 - Configuration Options
   - Automatic Gearbox
