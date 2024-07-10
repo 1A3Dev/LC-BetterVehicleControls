@@ -1,3 +1,10 @@
+### 1.1.1
+
+- Added a new configurable keybind to toggle the headlights.
+- Added a new configurable keybind to honk the horn.
+- Added a new configurable keybind to toggle the windscreen wipers.
+- Fixed the button to toggle the magnet working even if you aren't in the drivers seat.
+
 ### 1.1.0
 
 - Added a new configurable keybind to manually re-center the wheel (unbinded by default).

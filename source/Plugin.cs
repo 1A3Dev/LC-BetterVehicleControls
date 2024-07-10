@@ -79,12 +79,6 @@ namespace BetterVehicleControls
 
     internal class VehicleControls : LcInputActions
     {
-        [InputAction(KeyboardControl.W, Name = "Drive Forward", GamepadPath = "<Gamepad>/leftStick/up")]
-        public InputAction MoveForwardsKey { get; set; }
-
-        [InputAction(KeyboardControl.S, Name = "Drive Backward", GamepadPath = "<Gamepad>/leftStick/down")]
-        public InputAction MoveBackwardsKey { get; set; }
-
         [InputAction(KeyboardControl.None, Name = "Gas Pedal", GamepadControl = GamepadControl.RightTrigger)]
         public InputAction GasPedalKey { get; set; }
 
@@ -94,6 +88,12 @@ namespace BetterVehicleControls
         [InputAction(KeyboardControl.B, Name = "Boost", GamepadControl = GamepadControl.ButtonNorth)]
         public InputAction TurboKey { get; set; }
 
+        [InputAction(KeyboardControl.W, Name = "Drive Forward", GamepadPath = "<Gamepad>/leftStick/up")]
+        public InputAction MoveForwardsKey { get; set; }
+
+        [InputAction(KeyboardControl.S, Name = "Drive Backward", GamepadPath = "<Gamepad>/leftStick/down")]
+        public InputAction MoveBackwardsKey { get; set; }
+
         [InputAction(MouseControl.ScrollUp, Name = "Shift Gear Forward", GamepadControl = GamepadControl.LeftShoulder)]
         public InputAction GearShiftForwardKey { get; set; }
 
@@ -102,6 +102,15 @@ namespace BetterVehicleControls
 
         [InputAction(KeyboardControl.None, Name = "Center Steering Wheel")]
         public InputAction WheelCenterKey { get; set; }
+
+        [InputAction(KeyboardControl.L, Name = "Headlights")]
+        public InputAction ToggleHeadlightsKey { get; set; }
+
+        [InputAction(KeyboardControl.H, Name = "Horn")]
+        public InputAction ActivateHornKey { get; set; }
+
+        [InputAction(KeyboardControl.None, Name = "Wipers")]
+        public InputAction ToggleWipersKey { get; set; }
 
         [InputAction(KeyboardControl.None, Name = "Magnet")]
         public InputAction ToggleMagnetKey { get; set; }

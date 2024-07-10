@@ -9,12 +9,6 @@
 
 This mod improves the experience of using the Company Cruiser to make it more user friendly:
 
-- Customisable Keybinds (via the keybind settings in the pause menu)
-  - Vehicle Movement
-  - Switching Gears
-  - Manually Center Wheel
-  - Toggle Magnet
-    - This only works when you are within the range of the magnet.
 - Configuration Options
   - Automatic Gearbox
     - Should the gear automatically switch between drive & reverse when pressing the forward/backwards buttons?
@@ -30,6 +24,16 @@ This mod improves the experience of using the Company Cruiser to make it more us
     - What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)
   - Turbo Boosts
     - How many turbo boosts should you be able to have queued up at the same time? (Vanilla: 5)
+- Customisable Keybinds (via the keybind settings in the pause menu)
+  - Vehicle Movement
+  - Switching Gears
+  - Manually Center Wheel
+  - Headlights
+  - Horn
+  - Windscreen Wipers
+  - Toggle Magnet
+- Fixes
+  - Fixed steering wheel visually desyncing from the actual steering angle.
 
 **NOTE: The "Gas Pedal" keybind overrides the "Drive Forward/Backward" keybinds (if bound to the same key) so if the mod doesn't seem to work properly, make sure that the "Gas Pedal" keybind isn't bound to the same key as "Drive Forward/Backward"!**
 

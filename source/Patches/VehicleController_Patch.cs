@@ -11,6 +11,35 @@ namespace BetterVehicleControls.Patches
     [HarmonyPatch]
     internal static class Patches_VehicleController
     {
+        internal static VehicleController controlledVehicle = null;
+        public static VehicleController GetControlledVehicle() {
+            if (controlledVehicle == null || !controlledVehicle.localPlayerInControl)
+            {
+                VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
+                if (vehicle != null && vehicle.localPlayerInControl)
+                {
+                    controlledVehicle = vehicle;
+                }
+                else
+                {
+                    controlledVehicle = null;
+                }
+            }
+
+            return controlledVehicle;
+        }
+
+        [HarmonyPatch(typeof(VehicleController), "Start")]
+        [HarmonyPrefix]
+        public static void Start(VehicleController __instance)
+        {
+            if (__instance.IsOwner && __instance.headlightsContainer.activeSelf != (TimeOfDay.Instance != null && TimeOfDay.Instance.normalizedTimeOfDay >= 0.63f))
+            {
+                __instance.ToggleHeadlightsLocalClient();
+                PluginLoader.logSource.LogInfo("Automatically toggled headlights due to time of day.");
+            }
+        }
+
         [HarmonyPatch(typeof(VehicleController), "TryIgnition")]
         [HarmonyPrefix]
         public static void TryIgnition(ref float ___chanceToStartIgnition)
@@ -50,6 +79,10 @@ namespace BetterVehicleControls.Patches
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed += ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed += ChangeGear_Backward;
             PluginLoader.VehicleControlsInstance.ToggleMagnetKey.performed += ActivateMagnet;
+            PluginLoader.VehicleControlsInstance.ToggleHeadlightsKey.performed += ActivateHeadlights;
+            PluginLoader.VehicleControlsInstance.ToggleWipersKey.performed += ActivateWipers;
+            PluginLoader.VehicleControlsInstance.ActivateHornKey.performed += ActivateHorn;
+            PluginLoader.VehicleControlsInstance.ActivateHornKey.canceled += ActivateHorn;
 
             centerKeyPressed = false;
         }
@@ -63,6 +96,10 @@ namespace BetterVehicleControls.Patches
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed -= ChangeGear_Backward;
             PluginLoader.VehicleControlsInstance.ToggleMagnetKey.performed -= ActivateMagnet;
+            PluginLoader.VehicleControlsInstance.ToggleHeadlightsKey.performed -= ActivateHeadlights;
+            PluginLoader.VehicleControlsInstance.ToggleWipersKey.performed -= ActivateWipers;
+            PluginLoader.VehicleControlsInstance.ActivateHornKey.performed -= ActivateHorn;
+            PluginLoader.VehicleControlsInstance.ActivateHornKey.canceled -= ActivateHorn;
         }
 
         [HarmonyPatch(typeof(VehicleController), "GetVehicleInput")]
@@ -149,8 +186,9 @@ namespace BetterVehicleControls.Patches
         public static void ChangeGear_Forward(InputAction.CallbackContext context)
         {
             if (!context.performed) return;
-            VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
-            if (vehicle != null && vehicle.localPlayerInControl)
+
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle != null)
             {
                 int gear = (int)vehicle.gear;
                 if (gear < 3)
@@ -162,8 +200,9 @@ namespace BetterVehicleControls.Patches
         public static void ChangeGear_Backward(InputAction.CallbackContext context)
         {
             if (!context.performed) return;
-            VehicleController vehicle = Object.FindObjectsByType<VehicleController>(FindObjectsSortMode.None).FirstOrDefault(x => x.localPlayerInControl);
-            if (vehicle != null && vehicle.localPlayerInControl)
+
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle != null)
             {
                 int gear = (int)vehicle.gear;
                 if (gear > 1)
@@ -179,16 +218,49 @@ namespace BetterVehicleControls.Patches
 
             GameObject magnetLever = GameObject.Find("Environment/HangarShip/MagnetLever");
             if (magnetLever == null) return;
-
             AnimatedObjectTrigger magnetTrigger = magnetLever.GetComponent<AnimatedObjectTrigger>();
             if (magnetTrigger == null) return;
 
-            PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
-            if (Vector3.Distance(player.transform.position, StartOfRound.Instance.magnetPoint.position) >= 10f) return;
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle == null) return;
 
-            magnetTrigger.TriggerAnimation(player);
-            string newState = magnetTrigger.boolValue ? "on" : "off";
-            HUDManager.Instance.AddChatMessage($"You turned {newState} the magnet!");
+            float magnetDistance = Vector3.Distance(vehicle.transform.position, StartOfRound.Instance.magnetPoint.position);
+            if (magnetDistance >= 10f)
+            {
+                PluginLoader.logSource.LogDebug($"Vehicle is too far away from the magnet to toggle it. Distance: {magnetDistance}");
+                return;
+            }
+
+            magnetTrigger.TriggerAnimation(GameNetworkManager.Instance.localPlayerController);
+        }
+
+        public static void ActivateHeadlights(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+
+            VehicleController vehicle = GetControlledVehicle();
+            vehicle?.ToggleHeadlightsLocalClient();
+        }
+
+        public static void ActivateWipers(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle != null)
+            {
+                AnimatedObjectTrigger windscreenWipers = vehicle.transform.Find("Meshes/Windwipers/WindwipersAnim")?.GetComponent<AnimatedObjectTrigger>();
+                windscreenWipers?.TriggerAnimation(StartOfRound.Instance.localPlayerController);
+            }
+        }
+
+        public static void ActivateHorn(InputAction.CallbackContext context)
+        {
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle != null && ((context.performed && !vehicle.honkingHorn) || (context.canceled && vehicle.honkingHorn)))
+            {
+                vehicle.SetHonkingLocalClient(!vehicle.honkingHorn);
+            }
         }
 
         [HarmonyPatch(typeof(VehicleController), "AddTurboBoost")]
