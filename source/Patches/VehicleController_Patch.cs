@@ -225,13 +225,15 @@ namespace BetterVehicleControls.Patches
             if (vehicle == null) return;
 
             float magnetDistance = Vector3.Distance(vehicle.transform.position, StartOfRound.Instance.magnetPoint.position);
-            if (magnetDistance >= 10f)
+            if (magnetDistance >= 20f)
             {
                 PluginLoader.logSource.LogDebug($"Vehicle is too far away from the magnet to toggle it. Distance: {magnetDistance}");
                 return;
             }
 
             magnetTrigger.TriggerAnimation(GameNetworkManager.Instance.localPlayerController);
+            string newState = magnetTrigger.boolValue ? "Activated" : "Deactivated";
+            HUDManager.Instance.DisplayGlobalNotification($"Ship Magnet {newState}");
         }
 
         public static void ActivateHeadlights(InputAction.CallbackContext context)
