@@ -75,6 +75,7 @@ namespace BetterVehicleControls.Patches
             
             inputActionAsset.FindAction("Jump", false).performed -= __instance.DoTurboBoost;
             PluginLoader.VehicleControlsInstance.TurboKey.performed += __instance.DoTurboBoost;
+            PluginLoader.VehicleControlsInstance.JumpKey.performed += DoJump;
 
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed += ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed += ChangeGear_Backward;
@@ -263,6 +264,28 @@ namespace BetterVehicleControls.Patches
             {
                 vehicle.SetHonkingLocalClient(!vehicle.honkingHorn);
             }
+        }
+
+        public static void DoJump(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+
+            VehicleController vehicle = GetControlledVehicle();
+            if (vehicle == null) return;
+
+            if(vehicle.turboBoosts == 0)
+            {
+                vehicle.DoTurboBoost(context);
+                return;
+            }
+
+            if (vehicle.jumpingInCar || vehicle.keyIsInDriverHand) return;
+
+            int storedBoosts = vehicle.turboBoosts;
+            vehicle.turboBoosts = 0;
+            Vector2 sideBoostVector = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Move", false).ReadValue<Vector2>();
+            vehicle.UseTurboBoostLocalClient(sideBoostVector);
+            vehicle.turboBoosts = storedBoosts;
         }
 
         [HarmonyPatch(typeof(VehicleController), "AddTurboBoost")]
