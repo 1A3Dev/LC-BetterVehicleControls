@@ -85,10 +85,10 @@ namespace BetterVehicleControls
         [InputAction(KeyboardControl.Space, Name = "Brake", GamepadControl = GamepadControl.LeftTrigger)]
         public InputAction BrakePedalKey { get; set; }
 
-        [InputAction(KeyboardControl.B, Name = "Boost", GamepadControl = GamepadControl.ButtonNorth)]
+        [InputAction(KeyboardControl.B, Name = "Jump/Boost", GamepadControl = GamepadControl.ButtonNorth)]
         public InputAction TurboKey { get; set; }
 
-        [InputAction(KeyboardControl.C, Name = "Jump")]
+        [InputAction(KeyboardControl.None, Name = "Jump")]
         public InputAction JumpKey { get; set; }
 
         [InputAction(KeyboardControl.W, Name = "Drive Forward", GamepadPath = "<Gamepad>/leftStick/up")]

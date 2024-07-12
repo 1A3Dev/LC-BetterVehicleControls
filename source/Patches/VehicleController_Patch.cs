@@ -94,6 +94,7 @@ namespace BetterVehicleControls.Patches
         {
             InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
             PluginLoader.VehicleControlsInstance.TurboKey.performed -= __instance.DoTurboBoost;
+            PluginLoader.VehicleControlsInstance.JumpKey.performed -= DoJump;
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
             PluginLoader.VehicleControlsInstance.GearShiftBackwardKey.performed -= ChangeGear_Backward;
             PluginLoader.VehicleControlsInstance.ToggleMagnetKey.performed -= ActivateMagnet;
@@ -273,19 +274,25 @@ namespace BetterVehicleControls.Patches
             VehicleController vehicle = GetControlledVehicle();
             if (vehicle == null) return;
 
-            if(vehicle.turboBoosts == 0)
-            {
-                vehicle.DoTurboBoost(context);
-                return;
-            }
-
             if (vehicle.jumpingInCar || vehicle.keyIsInDriverHand) return;
 
-            int storedBoosts = vehicle.turboBoosts;
-            vehicle.turboBoosts = 0;
-            Vector2 sideBoostVector = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Move", false).ReadValue<Vector2>();
-            vehicle.UseTurboBoostLocalClient(sideBoostVector);
-            vehicle.turboBoosts = storedBoosts;
+            if (vehicle.turboBoosts == 0)
+            {
+                vehicle.DoTurboBoost(context);
+            }
+            else
+            {
+                if (vehicle.turboBoostParticle.isPlaying) return;
+
+                Vector2 dir = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Move", false).ReadValue<Vector2>();
+                if (vehicle.IsOwner)
+                {
+                    vehicle.jumpingInCar = true;
+                    GameNetworkManager.Instance.localPlayerController.playerBodyAnimator.SetTrigger("SA_JumpInCar");
+                    vehicle.StartCoroutine(vehicle.jerkCarUpward(dir));
+                }
+                vehicle.springAudio.PlayOneShot(vehicle.jumpInCarSFX);
+            }
         }
 
         [HarmonyPatch(typeof(VehicleController), "AddTurboBoost")]

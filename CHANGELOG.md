@@ -1,9 +1,14 @@
+### 1.1.2
+
+- Added a new configurable keybind that lets you jump even if you have boosts available.
+
 ### 1.1.1
 
 - Added a new configurable keybind to toggle the headlights.
 - Added a new configurable keybind to honk the horn.
 - Added a new configurable keybind to toggle the windscreen wipers.
 - Fixed the button to toggle the magnet working even if you aren't in the drivers seat.
+- When the cruiser is purchased during daytime the headlights will be turned off (until you turn them back on).
 
 ### 1.1.0
 
