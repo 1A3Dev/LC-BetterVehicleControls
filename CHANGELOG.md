@@ -1,6 +1,6 @@
 ### 1.1.2
 
-- Added a new configurable keybind that lets you jump even if you have boosts available.
+- Added a new configurable keybind that allows you to jump even if you have boosts available.
 
 ### 1.1.1
 

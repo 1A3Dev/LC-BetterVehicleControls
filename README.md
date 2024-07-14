@@ -26,6 +26,10 @@ This mod improves the experience of using the Company Cruiser to make it more us
     - How many turbo boosts should you be able to have queued up at the same time? (Vanilla: 5)
 - Customisable Keybinds (via the keybind settings in the pause menu)
   - Vehicle Movement
+  - Jump/Boost
+    - This is the same as the vanilla - if you have any boost available then it boosts otherwise it jumps.
+  - Jump
+    - This allows you to jump even when you have boosts available.
   - Switching Gears
   - Manually Center Wheel
   - Headlights
