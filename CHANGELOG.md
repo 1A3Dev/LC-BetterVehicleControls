@@ -1,3 +1,7 @@
+### 1.1.3
+
+- Updated README.md
+
 ### 1.1.2
 
 - Added a new configurable keybind that allows you to jump even if you have boosts available.
