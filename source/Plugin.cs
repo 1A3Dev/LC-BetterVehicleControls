@@ -9,14 +9,11 @@ using UnityEngine.InputSystem;
 
 namespace BetterVehicleControls
 {
-    [BepInPlugin(modGUID, "BetterVehicleControls", modVersion)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.HardDependency)]
     internal class PluginLoader : BaseUnityPlugin
     {
-        internal const string modGUID = "Dev1A3.BetterVehicleControls";
-        internal const string modVersion = "1.0.0";
-
-        private readonly Harmony harmony = new Harmony(modGUID);
+        private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
         private static bool initialized;
 
@@ -69,7 +66,7 @@ namespace BetterVehicleControls
             RecenterWheelSpeed = PluginLoader.Instance.Config.Bind("Settings", "Center Wheel Speed", -1, new ConfigDescription("How fast should the wheel be re-centered? (Instant: 0, Vanilla: -1)", recenterWheelSpeedRange));
             AcceptableValueRange<int> ignitionChanceRange = new AcceptableValueRange<int>(0, 101);
             ChanceToStartIgnition = PluginLoader.Instance.Config.Bind("Settings", "Ignition Chance", 0, new ConfigDescription("What should the success chance for the ignition be? If set to 0 this will increase the chance each time the ignition is used. (Vanilla: 0)", ignitionChanceRange));
-            
+
             AcceptableValueRange<int> turboBoostsRange = new AcceptableValueRange<int>(1, 100);
             MaxTurboBoosts = PluginLoader.Instance.Config.Bind("Settings", "Turbo Boosts", 5, new ConfigDescription("How many turbo boosts should you be able to have queued up at the same time? (Vanilla: 5)", turboBoostsRange));
             PluginLoader.maxTurboBoosts = MaxTurboBoosts.Value;

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>BetterVehicleControls</AssemblyName>
+        <AssemblyName>uk.1a3.bettervehiclecontrols</AssemblyName>
+        <Product>BetterVehicleControls</Product>
         <TargetFramework>netstandard2.1</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
