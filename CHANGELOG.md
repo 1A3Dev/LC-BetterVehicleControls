@@ -1,3 +1,7 @@
+### 1.1.4
+
+- Updated guid and fixed mod version
+
 ### 1.1.3
 
 - Updated README.md
