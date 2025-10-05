@@ -1,3 +1,7 @@
+### 1.1.5
+
+- Re-built for v73
+
 ### 1.1.4
 
 - Updated guid and fixed mod version
