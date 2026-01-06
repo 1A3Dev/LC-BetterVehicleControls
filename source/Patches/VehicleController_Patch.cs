@@ -190,7 +190,7 @@ namespace BetterVehicleControls.Patches
             if (!context.performed) return;
 
             VehicleController vehicle = GetControlledVehicle();
-            if (vehicle != null)
+            if (vehicle != null && !vehicle.drivePedalPressed)
             {
                 int gear = (int)vehicle.gear;
                 if (gear < 3)
@@ -204,7 +204,7 @@ namespace BetterVehicleControls.Patches
             if (!context.performed) return;
 
             VehicleController vehicle = GetControlledVehicle();
-            if (vehicle != null)
+            if (vehicle != null && !vehicle.drivePedalPressed)
             {
                 int gear = (int)vehicle.gear;
                 if (gear > 1)

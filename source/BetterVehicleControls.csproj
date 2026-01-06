@@ -6,6 +6,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -27,7 +28,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="BepInEx.Core" Version="5.*" />
-        <PackageReference Include="UnityEngine.Modules" Version="2023.2.4" IncludeAssets="compile" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" />
         <PackageReference Include="Rune580.Mods.LethalCompany.InputUtils" version="0.7.7" />
     </ItemGroup>
 

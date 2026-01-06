@@ -1,3 +1,7 @@
+### 1.1.6
+
+- Disabled gear switching whilst any of the drive keys are pressed
+
 ### 1.1.5
 
 - Re-built for v73
