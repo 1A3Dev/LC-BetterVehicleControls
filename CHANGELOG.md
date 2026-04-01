@@ -1,3 +1,7 @@
+### 1.1.8
+
+- v80 support
+
 ### 1.1.7
 
 - README now shows which mod version should be used for each game version

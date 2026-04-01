@@ -71,7 +71,7 @@ namespace BetterVehicleControls.Patches
         public static void ActivateControl(VehicleController __instance)
         {
             __instance.setControlTips = true;
-            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
+            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : InputSystem.actions;
             
             inputActionAsset.FindAction("Jump", false).performed -= __instance.DoTurboBoost;
             PluginLoader.VehicleControlsInstance.TurboKey.performed += __instance.DoTurboBoost;
@@ -92,7 +92,7 @@ namespace BetterVehicleControls.Patches
         [HarmonyPostfix]
         public static void DisableControl(VehicleController __instance)
         {
-            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : IngamePlayerSettings.Instance.playerInput.actions;
+            InputActionAsset inputActionAsset = __instance.testingVehicleInEditor ? __instance.input.actions : InputSystem.actions;
             PluginLoader.VehicleControlsInstance.TurboKey.performed -= __instance.DoTurboBoost;
             PluginLoader.VehicleControlsInstance.JumpKey.performed -= DoJump;
             PluginLoader.VehicleControlsInstance.GearShiftForwardKey.performed -= ChangeGear_Forward;
@@ -284,7 +284,7 @@ namespace BetterVehicleControls.Patches
             {
                 if (vehicle.turboBoostParticle.isPlaying) return;
 
-                Vector2 dir = IngamePlayerSettings.Instance.playerInput.actions.FindAction("Move", false).ReadValue<Vector2>();
+                Vector2 dir = InputSystem.actions.FindAction("Move", false).ReadValue<Vector2>();
                 if (vehicle.IsOwner)
                 {
                     vehicle.jumpingInCar = true;
