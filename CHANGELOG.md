@@ -1,6 +1,6 @@
 ### 1.1.7
 
-- Disabled gear switching whilst any of the drive keys are pressed
+- README now shows which mod version should be used for each game version
 
 ### 1.1.6
 
